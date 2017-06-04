@@ -1,0 +1,46 @@
+<!-- Validation failure messages -->
+<% if @connection.errors.any? %>
+  <% @connection.errors.full_messages.each do |message| %>
+    <div class="alert alert-dismissable alert-danger">
+      <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+      <%= message %>
+    </div>
+  <% end %>
+<% end %>
+
+<div class="page-header">
+  <h3>Add Connection</h3>
+</div>
+
+<div class="row">
+  <div class="col-md-12">
+    <form action="/create_connection" method="post">
+      <!-- Hidden input for authenticity token to protect from forgery -->
+      <input name="authenticity_token" type="hidden" value="<%= form_authenticity_token %>">
+
+      <!-- Label and input for follower_id -->
+      <div class="form-group">
+        <label for="follower_id" class="control-label">
+          Follower
+        </label>
+
+        <input type="text" id="follower_id" name="follower_id" placeholder="Follower" class="form-control" value="<%= @connection.follower_id %>">
+      </div>
+
+      <!-- Label and input for leader_id -->
+      <div class="form-group">
+        <label for="leader_id" class="control-label">
+          Leader
+        </label>
+
+        <input type="text" id="leader_id" name="leader_id" placeholder="Leader" class="form-control" value="<%= @connection.leader_id %>">
+      </div>
+
+      <button class="btn btn-success">
+        Create Connection
+      </button>
+      or
+      <a href="/connections">Cancel</a>
+    </form>
+  </div>
+</div>
