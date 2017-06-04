@@ -1,0 +1,136 @@
+<!-- Validation failure messages -->
+<% if @restaurant.errors.any? %>
+  <% @restaurant.errors.full_messages.each do |message| %>
+    <div class="alert alert-dismissable alert-danger">
+      <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+      <%= message %>
+    </div>
+  <% end %>
+<% end %>
+
+<div class="page-header">
+  <h3>Add Restaurant</h3>
+</div>
+
+<div class="row">
+  <div class="col-md-12">
+    <form action="/create_restaurant" method="post">
+      <!-- Hidden input for authenticity token to protect from forgery -->
+      <input name="authenticity_token" type="hidden" value="<%= form_authenticity_token %>">
+
+      <!-- Label and input for placeid -->
+      <div class="form-group">
+        <label for="placeid" class="control-label">
+          Placeid
+        </label>
+
+        <input type="text" id="placeid" name="placeid" placeholder="Placeid" class="form-control" value="<%= @restaurant.placeid %>">
+      </div>
+
+      <!-- Label and input for name -->
+      <div class="form-group">
+        <label for="name" class="control-label">
+          Name
+        </label>
+
+        <input type="text" id="name" name="name" placeholder="Name" class="form-control" value="<%= @restaurant.name %>">
+      </div>
+
+      <!-- Label and input for latitude -->
+      <div class="form-group">
+        <label for="latitude" class="control-label">
+          Latitude
+        </label>
+
+        <input type="text" id="latitude" name="latitude" placeholder="Latitude" class="form-control" value="<%= @restaurant.latitude %>">
+      </div>
+
+      <!-- Label and input for longitude -->
+      <div class="form-group">
+        <label for="longitude" class="control-label">
+          Longitude
+        </label>
+
+        <input type="text" id="longitude" name="longitude" placeholder="Longitude" class="form-control" value="<%= @restaurant.longitude %>">
+      </div>
+
+      <!-- Label and input for addresss -->
+      <div class="form-group">
+        <label for="addresss" class="control-label">
+          Addresss
+        </label>
+
+        <input type="text" id="addresss" name="addresss" placeholder="Addresss" class="form-control" value="<%= @restaurant.addresss %>">
+      </div>
+
+      <!-- Label and input for zipcode -->
+      <div class="form-group">
+        <label for="zipcode" class="control-label">
+          Zipcode
+        </label>
+
+        <input type="text" id="zipcode" name="zipcode" placeholder="Zipcode" class="form-control" value="<%= @restaurant.zipcode %>">
+      </div>
+
+      <!-- Label and input for phone_number -->
+      <div class="form-group">
+        <label for="phone_number" class="control-label">
+          Phone number
+        </label>
+
+        <input type="text" id="phone_number" name="phone_number" placeholder="Phone number" class="form-control" value="<%= @restaurant.phone_number %>">
+      </div>
+
+      <!-- Label and input for url -->
+      <div class="form-group">
+        <label for="url" class="control-label">
+          Url
+        </label>
+
+        <input type="text" id="url" name="url" placeholder="Url" class="form-control" value="<%= @restaurant.url %>">
+      </div>
+
+      <!-- Label and input for price_level -->
+      <div class="form-group">
+        <label for="price_level" class="control-label">
+          Price level
+        </label>
+
+        <input type="text" id="price_level" name="price_level" placeholder="Price level" class="form-control" value="<%= @restaurant.price_level %>">
+      </div>
+
+      <!-- Label and input for rating -->
+      <div class="form-group">
+        <label for="rating" class="control-label">
+          Rating
+        </label>
+
+        <input type="text" id="rating" name="rating" placeholder="Rating" class="form-control" value="<%= @restaurant.rating %>">
+      </div>
+
+      <!-- Label and input for opening_hours -->
+      <div class="form-group">
+        <label for="opening_hours" class="control-label">
+          Opening hours
+        </label>
+
+        <textarea id="opening_hours" name="opening_hours" placeholder="Opening hours" class="form-control" rows="3"><%= @restaurant.opening_hours %></textarea>
+      </div>
+
+      <!-- Label and input for photo_url -->
+      <div class="form-group">
+        <label for="photo_url" class="control-label">
+          Photo url
+        </label>
+
+        <input type="text" id="photo_url" name="photo_url" placeholder="Photo url" class="form-control" value="<%= @restaurant.photo_url %>">
+      </div>
+
+      <button class="btn btn-success">
+        Create Restaurant
+      </button>
+      or
+      <a href="/restaurants">Cancel</a>
+    </form>
+  </div>
+</div>
