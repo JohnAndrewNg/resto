@@ -1,0 +1,71 @@
+<h3>Here are restaurants near <%= @address %>:</h3>
+
+
+<div class="container">
+
+  <% @results.shuffle.first(5).each do |result| %>
+
+  <div class="row">
+    <div class="col-md-6 col-md-offset-2">
+      <div class="panel panel-default">
+        <div class="panel-heading">
+          <h3 class="panel-title">
+            <a href="/users/<%= current_user.id %>"><%= result["name"].humanize.camelize %></a>
+            <small>
+              <%= result["opening_hours"]["open_now"] %>
+            </small>
+          </h3>
+        </div>
+
+        <div class="panel-body">
+          <a href="/users/<%= current_user.id %>">
+            <img src="https://maps.googleapis.com/maps/api/place/photo?maxwidth=600&maxheight=600&photoreference=<%= result["photos"][0]["photo_reference"] %>&key=AIzaSyAuo4_mSeoT40F-4QAP8uyTvCdw8c7cbvU" class="img-responsive">
+          </a>
+
+          <p>
+            <form action="/users/current_user.id" method="post">
+              <!-- Hidden input for authenticity token to protect from forgery -->
+              <input name="authenticity_token" type="hidden" value="4E1b5WDJgqAojmA1xxh0Y07mfla+SIF03sJG74z9uTxjQgMUtM+a0Fc3o8zbubmW4EEyNPagoErp/vMj/BHY8A==">
+              <input type="hidden" name="restaurant_id" value="<%= current_user.id %>">
+              <input type="hidden" name="user_id" value="<%= current_user.id %>">
+              <button class="btn btn-link">
+                <i class="fa fa-heart-o"></i>
+              </button>
+            </form>
+          </p>
+
+          <p>
+            <ul>
+              <li>Price level: <%= result["price_level"] %></li>
+              <li>Rating: <%= result["rating"] %></li>
+            </ul>
+
+            <form action="/create_favorite" method="post">
+              <!-- Hidden input for authenticity token to protect from forgery -->
+              <input name="authenticity_token" type="hidden" value="<%= form_authenticity_token %>">
+              <input type="hidden" id="name" name="name" value="<%= result["name"] %>">
+              <input type="hidden" id="price_level" name="price_level" value="<%= result["price_level"] %>">
+              <input type="hidden" id="rating" name="rating" value="<%= result["rating"] %>">
+              <input type="hidden" id="latitude" name="latitude" value="<%= result["geometry"]["location"]["lat"] %>">
+              <input type="hidden" id="longitude" name="longitude" value="<%= result["geometry"]["location"]["lng"] %>">
+              <input type="hidden" id="photo_reference" name="photo_reference" value="<%= result["photos"][0]["photo_reference"] %>">
+              <input type="hidden" id="placeid" name="placeid" value="<%= result["place_id"] %>">
+
+              <div class="form-group">
+                <button class="btn btn-primary">
+                  Favorite
+                </button>
+              </div>
+
+            </form>
+          </p>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+
+  <% end %>
+
+</div>

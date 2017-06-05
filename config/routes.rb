@@ -82,4 +82,16 @@ Rails.application.routes.draw do
   #DELETE
   get "/delete_user/:id", :controller => "users", :action => "destroy"
 
+
+  #------------------------------
+
+
+  # Routes for Search:
+  # CREATE
+  get "/search/new", :controller => "search", :action => "new"
+  get "/search/results", :controller => "search", :action => "results"
+
+
+  #------------------------------
+
 end
