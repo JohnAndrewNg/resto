@@ -36,7 +36,7 @@ Rails.application.routes.draw do
   # Routes for the Favorite resource:
   # CREATE
   get "/favorites/new", :controller => "favorites", :action => "new"
-  post "/create_favorite", :controller => "favorites", :action => "create"
+  get "/create_favorite", :controller => "favorites", :action => "create"
 
   # READ
   get "/favorites", :controller => "favorites", :action => "index"
@@ -51,7 +51,6 @@ Rails.application.routes.draw do
   #------------------------------
 
   # Routes for the Restaurant resource:
-  root "restaurants#index"
 
   # CREATE
   get "/restaurants/new", :controller => "restaurants", :action => "new"
@@ -85,6 +84,7 @@ Rails.application.routes.draw do
 
   #------------------------------
 
+  root "search#new"
 
   # Routes for Search:
   # CREATE

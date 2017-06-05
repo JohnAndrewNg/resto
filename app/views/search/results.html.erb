@@ -12,7 +12,11 @@
           <h3 class="panel-title">
             <a href="/users/<%= current_user.id %>"><%= result["name"].humanize.camelize %></a>
             <small>
-              <%= result["opening_hours"]["open_now"] %>
+              <% if result["opening_hours"]["open_now"] == true %>
+              Open now
+              <% else %>
+              Closed right now
+              <% end %>
             </small>
           </h3>
         </div>
@@ -40,7 +44,8 @@
               <li>Rating: <%= result["rating"] %></li>
             </ul>
 
-            <form action="/create_favorite" method="post">
+            <% if current_user.favourite_restaurants.find_by({:placeid => result["place_id"]}) == nil %>
+            <form action="/create_restaurant" method="post">
               <!-- Hidden input for authenticity token to protect from forgery -->
               <input name="authenticity_token" type="hidden" value="<%= form_authenticity_token %>">
               <input type="hidden" id="name" name="name" value="<%= result["name"] %>">
@@ -56,8 +61,15 @@
                   Favorite
                 </button>
               </div>
-
             </form>
+            <% else %>
+            <div class="form-group">
+              <a href="/delete_favorite/<%= current_user.favourite_restaurants.find_by({:placeid => result["place_id"]}).id %>" class="btn btn-danger">Remove</a>
+            </div>
+            <% end %>
+
+
+
           </p>
         </div>
 

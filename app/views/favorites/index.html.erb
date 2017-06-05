@@ -9,15 +9,21 @@
   <div class="col-md-12">
     <table class="table table-striped table-hover">
       <tr>
+        <th>ID</th>
+        <th>Restaurant ID</th>
         <th>Restaurant</th>
+        <th>User ID</th>
         <th>User</th>
         <th>Actions</th>
       </tr>
 
       <% @favorites.each do |favorite| %>
       <tr>
+        <td><%= favorite.id %></td>
         <td><%= favorite.restaurant_id %></td>
+        <td><%= favorite.restaurant.name %></td>
         <td><%= favorite.user_id %></td>
+        <td><%= favorite.user.username %></td>
         <td>
           <a href="/favorites/<%= favorite.id %>" class="btn btn-primary">Show</a>
           <a href="/favorites/<%= favorite.id %>/edit" class="btn btn-warning">Edit</a>
