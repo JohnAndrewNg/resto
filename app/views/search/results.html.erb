@@ -3,7 +3,7 @@
 
 <div class="container">
 
-  <% @results.shuffle.first(5).each do |result| %>
+  <% @results.first(5).shuffle.each do |result| %>
 
   <div class="row">
     <div class="col-md-6 col-md-offset-2">
@@ -22,10 +22,13 @@
         </div>
 
         <div class="panel-body">
+          <% if result["photos"] == nil %>
+          <div class="well well-sm">Image not yet available</div>
+          <% else %>
           <a href="/users/<%= current_user.id %>">
             <img src="https://maps.googleapis.com/maps/api/place/photo?maxwidth=600&maxheight=600&photoreference=<%= result["photos"][0]["photo_reference"] %>&key=AIzaSyAuo4_mSeoT40F-4QAP8uyTvCdw8c7cbvU" class="img-responsive">
           </a>
-
+          <% end %>
           <p>
             <form action="/users/current_user.id" method="post">
               <!-- Hidden input for authenticity token to protect from forgery -->
@@ -40,8 +43,16 @@
 
           <p>
             <ul>
+              <% if result["price_level"] == nil %>
+              <div class="well well-sm">Price level not yet available</div>
+              <% else %>
               <li>Price level: <%= result["price_level"] %></li>
+              <% end %>
+              <% if result["rating"] == nil %>
+              <div class="well well-sm">Rating not yet available</div>
+              <% else %>
               <li>Rating: <%= result["rating"] %></li>
+              <% end %>
             </ul>
 
             <% if current_user.favourite_restaurants.find_by({:placeid => result["place_id"]}) == nil %>
@@ -53,7 +64,11 @@
               <input type="hidden" id="rating" name="rating" value="<%= result["rating"] %>">
               <input type="hidden" id="latitude" name="latitude" value="<%= result["geometry"]["location"]["lat"] %>">
               <input type="hidden" id="longitude" name="longitude" value="<%= result["geometry"]["location"]["lng"] %>">
+              <% if result["photos"] == nil %>
+              <input type="hidden" id="photo_reference" name="photo_reference" value="missing">
+              <% else %>
               <input type="hidden" id="photo_reference" name="photo_reference" value="<%= result["photos"][0]["photo_reference"] %>">
+              <% end %>
               <input type="hidden" id="placeid" name="placeid" value="<%= result["place_id"] %>">
 
               <div class="form-group">

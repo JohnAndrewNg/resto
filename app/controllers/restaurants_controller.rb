@@ -29,8 +29,10 @@ class RestaurantsController < ApplicationController
       @restaurant.longitude = params[:longitude]
       @restaurant.price_level = params[:price_level]
       @restaurant.rating = params[:rating]
-      @restaurant.photo_url = "https://maps.googleapis.com/maps/api/place/photo?maxwidth=600&maxheight=600&photoreference="+params[:photo_reference]+"&key=AIzaSyAuo4_mSeoT40F-4QAP8uyTvCdw8c7cbvU"
-
+      if params[:photo_reference] = "missing"
+      else
+        @restaurant.photo_url = "https://maps.googleapis.com/maps/api/place/photo?maxwidth=600&maxheight=600&photoreference="+params[:photo_reference]+"&key=AIzaSyAuo4_mSeoT40F-4QAP8uyTvCdw8c7cbvU"
+      end
       url_details =
       "https://maps.googleapis.com/maps/api/place/details/json?placeid="+@restaurant.placeid+"&key= AIzaSyAuo4_mSeoT40F-4QAP8uyTvCdw8c7cbvU"
 
@@ -38,14 +40,21 @@ class RestaurantsController < ApplicationController
 
       @restaurant.addresss = parsed_data["result"]["formatted_address"]
       @restaurant.phone_number = parsed_data["result"]["formatted_phone_number"]
-      @restaurant.zipcode = parsed_data["result"]["address_components"][7]["long_name"]
+#      for num in 0..12 do
+#        if parsed_data["result"]["address_components"][num]["types"] == "postal_code"
+#          @restaurant.zipcode = parsed_data["result"]["address_components"][num]["long_name"]
+#          break
+#        else
+#        end
+#      end
+#      @restaurant.zipcode = parsed_data["result"]["address_components"][7]["long_name"]
       @restaurant.opening_hours = parsed_data["result"]["opening_hours"]["weekday_text"]
       @restaurant.url = parsed_data["result"]["website"]
 
       save_status = @restaurant.save
 
       if save_status == true
-#        redirect_to("/restaurants/#{@restaurant.id}", :notice => "Restaurant created successfully.")
+        #        redirect_to("/restaurants/#{@restaurant.id}", :notice => "Restaurant created successfully.")
         redirect_to controller: "favorites", action: "create", user_id: current_user.id, restaurant_id: Restaurant.find_by( {:placeid => params[:placeid]}).id
 
       else
@@ -53,7 +62,7 @@ class RestaurantsController < ApplicationController
       end
 
     else
-#      redirect_to("/create_favorite", :user_id => current_user.id, :restaurant_id => Restaurant.find_by( {:placeid => params[:placeid]}).id)
+      #      redirect_to("/create_favorite", :user_id => current_user.id, :restaurant_id => Restaurant.find_by( {:placeid => params[:placeid]}).id)
 
       redirect_to controller: "favorites", action: "create", user_id: current_user.id, restaurant_id: Restaurant.find_by( {:placeid => params[:placeid]}).id
     end

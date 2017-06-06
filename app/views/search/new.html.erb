@@ -5,25 +5,36 @@
       <div class="panel-heading">
         <h2 class="panel-title">Where would you like to eat?</h2>
       </div>
-
       <div class="panel-body">
 
         <form action="/search/results">
+
           <div class="form-group">
             <label for="address" class="col-sm-2 control-label">Address</label>
             <div class="col-sm-10">
               <input type="text" name="address" id="address" class="form-control"  placeholder="Find noms here...">
             </div>
           </div>
+          <p class="invisible">break </p>
+          <div class="form-group">
+            <label for="keyword" class="col-sm-2 control-label">Keyword (optional)</label>
+            <div class="col-sm-10">
+              <input type="text" name="keyword" id="keyword" class="form-control"  placeholder="Something cheap, romantic, fast, quiet...">
+            </div>
+          </div>
+
+
         </div>
         <button class="btn btn-primary btn-block">
           Search
         </button>
-      </div>
+      </form>
     </div>
   </div>
 </div>
 
+
+</div>
 <br><br><br>
 
 <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&key=AIzaSyAuo4_mSeoT40F-4QAP8uyTvCdw8c7cbvU"></script>
