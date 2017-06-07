@@ -1,6 +1,6 @@
 <h3>Here are restaurants near <%= @address %>:</h3>
 
-
+<br>
 <div class="container">
 
   <% @results.first(5).shuffle.each do |result| %>
@@ -10,7 +10,11 @@
       <div class="panel panel-default">
         <div class="panel-heading">
           <h3 class="panel-title">
-            <a href="/users/<%= current_user.id %>"><%= result["name"].humanize.camelize %></a>
+            <% if Restaurant.find_by( {:placeid => result["place_id"]}) == nil %>
+              <%= result["name"].camelize %>
+            <% else %>
+              <a href="/restaurants/<%= Restaurant.find_by( {:placeid => result["place_id"]}).id %>"><%= result["name"].camelize %></a>
+            <% end %>
             <small>
               <% if result["opening_hours"]["open_now"] == true %>
               Open now
@@ -24,36 +28,49 @@
         <div class="panel-body">
           <% if result["photos"] == nil %>
           <div class="well well-sm">Image not yet available</div>
-          <% else %>
-          <a href="/users/<%= current_user.id %>">
+          <% elsif Restaurant.find_by( {:placeid => result["place_id"]}) == nil %>
+          <img src="https://maps.googleapis.com/maps/api/place/photo?maxwidth=600&maxheight=600&photoreference=<%= result["photos"][0]["photo_reference"] %>&key=AIzaSyAuo4_mSeoT40F-4QAP8uyTvCdw8c7cbvU" class="img-responsive">
+          <% else  %>
+          <a href="/restaurants/<%= Restaurant.find_by( {:placeid => result["place_id"]}).id %>">
             <img src="https://maps.googleapis.com/maps/api/place/photo?maxwidth=600&maxheight=600&photoreference=<%= result["photos"][0]["photo_reference"] %>&key=AIzaSyAuo4_mSeoT40F-4QAP8uyTvCdw8c7cbvU" class="img-responsive">
           </a>
           <% end %>
           <p>
-            <form action="/users/current_user.id" method="post">
-              <!-- Hidden input for authenticity token to protect from forgery -->
-              <input name="authenticity_token" type="hidden" value="4E1b5WDJgqAojmA1xxh0Y07mfla+SIF03sJG74z9uTxjQgMUtM+a0Fc3o8zbubmW4EEyNPagoErp/vMj/BHY8A==">
-              <input type="hidden" name="restaurant_id" value="<%= current_user.id %>">
-              <input type="hidden" name="user_id" value="<%= current_user.id %>">
-              <button class="btn btn-link">
-                <i class="fa fa-heart-o"></i>
-              </button>
+            <div class="form control">
+            <% if Restaurant.find_by( {:placeid => result["place_id"]}) == nil %>
+              <i class="fa fa-heart-o"></i>
+            <% elsif Restaurant.find_by( {:placeid => result["place_id"]}).fans.count == 0 %>
+              <i class="fa fa-heart-o"></i>
+            <% else %>
+                <i class="fa fa-heart"></i>
             </form>
+            <% end %>
+
+            <% if Restaurant.find_by( {:placeid => result["place_id"]}) == nil %>
+              Nobody has pinned this restaurant yet
+            <% elsif Restaurant.find_by( {:placeid => result["place_id"]}).fans.count == 0 %>
+              Nobody has pinned this restaurant yet
+            <% elsif Restaurant.find_by( {:placeid => result["place_id"]}).fans.count == 1 %>
+              <%= Restaurant.find_by( {:placeid => result["place_id"]}).fans.all.pluck(:username).to_sentence %> has pinned this restaurant
+            <% else %>
+              <%= Restaurant.find_by( {:placeid => result["place_id"]}).fans.all.pluck(:username).to_sentence %> have pinned this restaurant
+            <% end %>
+          </div>
           </p>
 
           <p>
-            <ul>
+            <div>
               <% if result["price_level"] == nil %>
               <div class="well well-sm">Price level not yet available</div>
               <% else %>
-              <li>Price level: <%= result["price_level"] %></li>
+              <h6>Price level: <%= result["price_level"] %></h6>
               <% end %>
               <% if result["rating"] == nil %>
               <div class="well well-sm">Rating not yet available</div>
               <% else %>
-              <li>Rating: <%= result["rating"] %></li>
+              <h6>Rating: <%= result["rating"] %></h6>
               <% end %>
-            </ul>
+            </div>
 
             <% if current_user.favourite_restaurants.find_by({:placeid => result["place_id"]}) == nil %>
             <form action="/create_restaurant" method="post">
@@ -73,13 +90,13 @@
 
               <div class="form-group">
                 <button class="btn btn-primary">
-                  Favorite
+                  Pin
                 </button>
               </div>
             </form>
             <% else %>
             <div class="form-group">
-              <a href="/delete_favorite/<%= current_user.favourite_restaurants.find_by({:placeid => result["place_id"]}).id %>" class="btn btn-danger">Remove</a>
+              <a href="/delete_favorite/<%= current_user.favourite_restaurants.find_by({:placeid => result["place_id"]}).id %>" class="btn btn-danger">Unpin</a>
             </div>
             <% end %>
 
