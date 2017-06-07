@@ -38,25 +38,45 @@ class RestaurantsController < ApplicationController
 
       parsed_data = JSON.parse(open(url_details).read)
 
-      @restaurant.addresss = parsed_data["result"]["formatted_address"]
-      @restaurant.phone_number = parsed_data["result"]["formatted_phone_number"]
-#      for num in 0..12 do
-#        if parsed_data["result"]["address_components"][num]["types"] == "postal_code"
-#          @restaurant.zipcode = parsed_data["result"]["address_components"][num]["long_name"]
-#          break
-#        else
-#        end
-#      end
-#      @restaurant.zipcode = parsed_data["result"]["address_components"][7]["long_name"]
-      @restaurant.opening_hours = parsed_data["result"]["opening_hours"]["weekday_text"]
-      @restaurant.url = parsed_data["result"]["website"]
+      if parsed_data["result"]["formatted_address"] == nil
+      else
+        @restaurant.addresss = parsed_data["result"]["formatted_address"]
+      end
+
+      if parsed_data["result"]["formatted_phone_number"] == nil
+      else
+        @restaurant.phone_number = parsed_data["result"]["formatted_phone_number"]
+      end
+      #      for num in 0..12 do
+      #        if parsed_data["result"]["address_components"][num]["types"] == "postal_code"
+      #          @restaurant.zipcode = parsed_data["result"]["address_components"][num]["long_name"]
+      #          break
+      #        else
+      #        end
+      #      end
+      #      @restaurant.zipcode = parsed_data["result"]["address_components"][7]["long_name"]
+      if parsed_data["result"]["opening_hours"] == nil
+      else
+        @restaurant.opening_hours = parsed_data["result"]["opening_hours"]["weekday_text"]
+      end
+
+      if parsed_data["result"]["website"] == nil
+      else
+        @restaurant.url = parsed_data["result"]["website"]
+      end
 
       save_status = @restaurant.save
 
       if save_status == true
         #        redirect_to("/restaurants/#{@restaurant.id}", :notice => "Restaurant created successfully.")
-        redirect_to controller: "favorites", action: "create", user_id: current_user.id, restaurant_id: Restaurant.find_by( {:placeid => params[:placeid]}).id
 
+        if params[:actiontype] == "store"
+          redirect_to("/restaurants/#{@restaurant.id}")
+        else
+
+          redirect_to controller: "favorites", action: "create", user_id: current_user.id, restaurant_id: Restaurant.find_by( {:placeid => params[:placeid]}).id
+
+        end
       else
         render("restaurants/new.html.erb")
       end
@@ -64,7 +84,14 @@ class RestaurantsController < ApplicationController
     else
       #      redirect_to("/create_favorite", :user_id => current_user.id, :restaurant_id => Restaurant.find_by( {:placeid => params[:placeid]}).id)
 
-      redirect_to controller: "favorites", action: "create", user_id: current_user.id, restaurant_id: Restaurant.find_by( {:placeid => params[:placeid]}).id
+      if params[:actiontype] == "store"
+        redirect_to("/restaurants/#{Restaurant.find_by( {:placeid => params[:placeid]}).id}")
+
+      else
+
+        redirect_to controller: "favorites", action: "create", user_id: current_user.id, restaurant_id: Restaurant.find_by( {:placeid => params[:placeid]}).id
+
+      end
     end
   end
 
