@@ -60,9 +60,9 @@ class FavoritesController < ApplicationController
     @favorite.destroy
 
     if URI(request.referer).path == "/favorites/#{@favorite.id}"
-      redirect_to("/", :notice => "Favorite deleted.")
+      redirect_to("/", :notice => "Restaurant unpinned.")
     else
-      redirect_to(:back, :notice => "Favorite deleted.")
+      redirect_to(:back, :notice => "Restaurant unpinned.")
     end
   end
 end

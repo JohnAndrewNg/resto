@@ -29,7 +29,7 @@ class RestaurantsController < ApplicationController
       @restaurant.longitude = params[:longitude]
       @restaurant.price_level = params[:price_level]
       @restaurant.rating = params[:rating]
-      if params[:photo_reference] = "missing"
+      if params[:photo_reference] == "missing"
       else
         @restaurant.photo_url = "https://maps.googleapis.com/maps/api/place/photo?maxwidth=600&maxheight=600&photoreference="+params[:photo_reference]+"&key=AIzaSyAuo4_mSeoT40F-4QAP8uyTvCdw8c7cbvU"
       end

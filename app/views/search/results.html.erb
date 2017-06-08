@@ -150,7 +150,7 @@
               </p>
 
             </div>
-            <% if current_user.favourite_restaurants.find_by({:placeid => result["place_id"]}) == nil %>
+            <% if current_user.favorite_restaurants.find_by({:placeid => result["place_id"]}) == nil %>
             <form action="/create_restaurant" method="post">
               <!-- Hidden input for authenticity token to protect from forgery -->
               <input name="authenticity_token" type="hidden" value="<%= form_authenticity_token %>">
@@ -174,7 +174,7 @@
             </form>
             <% else %>
             <div class="form-group">
-              <a href="/delete_favorite/<%= current_user.favourite_restaurants.find_by({:placeid => result["place_id"]}).favorites.find_by(:user_id => current_user.id).id %>" class="btn btn-danger btn-block" style="background:#828282">Unpin</a>
+              <a href="/delete_favorite/<%= current_user.favorite_restaurants.find_by({:placeid => result["place_id"]}).favorites.find_by(:user_id => current_user.id).id %>" class="btn btn-danger btn-block" style="background:#828282">Unpin</a>
             </div>
             <% end %>
 
