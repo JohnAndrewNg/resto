@@ -22,142 +22,204 @@
   font-family:inherit;
   font-size:inherit;
 }
+.profile-pic-parent {
+  width: 145px;
+}
 
+.profile-pic-container {
+  display: block;
+  width: 100%;
+  height: auto;
+  position: relative;
+  overflow: hidden;
+  padding: 0 0 0 0;
+}
+
+.profile-pic-container img {
+  display: block;
+  max-width: 100%;
+  max-height: 100%;
+  position: relative;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+}
 
 </style>
 </head>
 
 
+<div class="row">
+  <div class="col-md-12 col-md-offset-0">
+    <div class="jumbotron">
+
+      <div class="row">
+        <% if @user.photo.present? %>
+        <div class="col-md-2">
+          <div class="profile-pic-parent">
+            <div class="profile-pic-container">
+              <img src="<%= @user.photo %>">
+            </div>
+          </div>
+        </div>
+        <% end %>
+
+        <div class="col-md-10">
+          <h3>
+            <%= @user.username %>
+          </h3>
+
+          <div class="row">
+            <div class="col-md-10">
+              <p><small><%= @user.first_name %> <%= @user.last_name %> | <%= @user.location %></small></p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <br>
+      <div class="row">
+
+        <% if @user.id == current_user.id %>
+        <% else %>
+
+        <div class="col-md-2">
+          <% connection = Connection.find_by(:follower_id => current_user.id, :leader_id => @user.id) %>
+          <% if connection.present? %>
+          <a href="/delete_connection/<%= connection.id %>" class="btn btn-success btn-block">
+            Following
+          </a>
+          <% else %>
+          <form action="/create_connection" method="post">
+            <!-- Hidden input for authenticity token to protect from forgery -->
+            <input name="authenticity_token" type="hidden" value="<%= form_authenticity_token %>">
+
+            <input type="hidden" id="follower_d" name="follower_id" value="<%= current_user.id %>">
+
+            <input type="hidden" id="leader_id" name="leader_id" value="<%= @user.id %>">
+
+            <button class="btn btn-default btn-block">
+              Follow
+            </button>
+          </form>
+          <% end %>
+        </div>
+        <% end %>
+
+        <div class="col-md-3">
+          <p class="lead">
+            <%= @user.favorite_restaurants.count %> pinned restaurants
+          </p>
+        </div>
+
+        <div class="col-md-3">
+          <p class="lead">
+            <%= @user.followers.count %> followers
+          </p>
+        </div>
+
+        <div class="col-md-3">
+          <p class="lead">
+            <%= @user.leaders.count %> following
+          </p>
+        </div>
+      </div>
+      <br>
+      <div class="row">
+        <div class="col-md-10">
+          <p><%= @user.bio %></p>
+          <div>
+          </div>
 
 
-<div class="page-header">
-  <h3>User #<%= @user.id %></h3>
+
+        </div>
+      </div>
+    </div>
+
+  </div>
 </div>
 
-<div class="row">
-  <div class="col-md-12 mb-2">
-    <dl class="dl-horizontal">
-      <dt>User</dt>
-      <dd><%= @user.id %></dd>
-
-      <dt>Username</dt>
-      <dd><%= @user.username %></dd>
-
-      <dt>Name</dt>
-      <dd><%= @user.first_name %> <%= @user.last_name %></dd>
-
-      <dt>Location</dt>
-      <dd><%= @user.location %><dd>
-
-        <dt>Bio</dt>
-        <dd><%= @user.bio %><dd>
-
-          <dt>Photo</dt>
-          <dd><img src="<%= @user.photo %>"><dd>
 
 
-          </dl>
+<div class="container">
 
-          <div class="btn-group btn-group-justified">
-            <a href="/users" class="btn btn-primary">
-              Back
-            </a>
+  <br>
+
+  <% @user.favorite_restaurants.reverse.each do |restaurant| %>
+
+  <div class="row">
+    <div class="col-md-6 col-md-offset-2">
+      <div class="panel panel-default">
+        <div class="panel-heading">
+          <h3 class="panel-title">
+            <a href="/restaurants/<%= restaurant.id %>"><%= restaurant.name %></a>
+            <small style="color:#828282">Pinned <%= time_ago_in_words(restaurant.favorites.find_by({:user_id => @user.id}).created_at) %> ago</small>
+          </h3>
+        </form>
+      </div>
+
+      <div class="panel-body">
+        <% if restaurant.photo_url == nil %>
+        <div class="well well-sm">Image not available</div>
+        <% else  %>
+        <a href="/restaurants/<%= restaurant.id %>">
+          <img src="<%= restaurant.photo_url %>" class="img-responsive">
+        </a>
+        <% end %>
+        <p>
+          <div class="form control">
+            <% if restaurant.fans.count == 0 %>
+            <i class="fa fa-heart-o"></i>
+            <% elsif restaurant.fans.count == 1 %>
+            <i class="fa fa-heart"></i>
+            <% elsif restaurant.fans.count == 2 %>
+            <i class="fa fa-heart"></i> <i class="fa fa-heart"></i>
+            <% elsif restaurant.fans.count == 3 %>
+            <i class="fa fa-heart"></i> <i class="fa fa-heart"></i> <i class="fa fa-heart"></i>
+            <% else %>
+            <i class="fa fa-heart"></i> <i class="fa fa-heart"></i> <i class="fa fa-heart"></i> <i class="fa fa-plus"></i>
+            <% end %>
+
+            <% if restaurant.fans.count == 0 %>
+            &nbsp;&nbsp;Nobody has pinned this restaurant yet
+            <% elsif restaurant.fans.count == 1 %>
+            &nbsp;&nbsp;1 person has pinned this restaurant
+            <% else %>
+            &nbsp;&nbsp;<%= restaurant.fans.count %> people have pinned this restaurant
+            <% end %>
+          </div>
+        </p>
+
+        <p>
+          <div>
+            <% if restaurant.fans.count == 0 %>
+            <br>
+            <% else %>
+            <ul class="nav nav-pills">
+              <% restaurant.fans.each do |fan| %>
+              <li><a href="/users/<%= fan.id %>"><%= fan.username %></a><li>
+                <% end %>
+                <ul>
+                  <% end %>
+                </div>
+              </p>
+
+            </div>
+            <% if @user.id == current_user.id %>
+            <div class="form-group">
+              <a href="/delete_favorite/<%= restaurant.favorites.find_by({:user_id => current_user.id}) %>" class="btn btn-danger btn-block" style="background:#828282">Unpin</a>
+            </div>
+
+            <% else %>
+
+            <% end %>
 
           </div>
         </div>
       </div>
 
 
+      <% end %>
 
-
-
-
-      <div class="container">
-
-        <div class="row">
-          <div class="col-md-6 col-md-offset-2">
-            <div class="jumbotron">
-              <h4><%= @user.username %>'s pinned restaurants</h4>
-            </div>
-          </div>
-        </div>
-
-        <br>
-
-        <% @user.favorite_restaurants.reverse.each do |restaurant| %>
-
-        <div class="row">
-          <div class="col-md-6 col-md-offset-2">
-            <div class="panel panel-default">
-              <div class="panel-heading">
-                <h3 class="panel-title">
-                  <a href="/restaurants/<%= restaurant.id %>"><%= restaurant.name %></a>
-                  <small style="color:#828282">Pinned <%= time_ago_in_words(restaurant.favorites.find_by({:user_id => @user.id}).created_at) %> ago</small>
-                </h3>
-              </form>
-            </div>
-
-            <div class="panel-body">
-              <% if restaurant.photo_url == nil %>
-              <div class="well well-sm">Image not available</div>
-              <% else  %>
-              <a href="/restaurants/<%= restaurant.id %>">
-                <img src="<%= restaurant.photo_url %>" class="img-responsive">
-              </a>
-              <% end %>
-              <p>
-                <div class="form control">
-                  <% if restaurant.fans.count == 0 %>
-                  <i class="fa fa-heart-o"></i>
-                  <% elsif restaurant.fans.count == 1 %>
-                  <i class="fa fa-heart"></i>
-                  <% elsif restaurant.fans.count == 2 %>
-                  <i class="fa fa-heart"></i> <i class="fa fa-heart"></i>
-                  <% elsif restaurant.fans.count == 3 %>
-                  <i class="fa fa-heart"></i> <i class="fa fa-heart"></i> <i class="fa fa-heart"></i>
-                  <% else %>
-                  <i class="fa fa-heart"></i> <i class="fa fa-heart"></i> <i class="fa fa-heart"></i> <i class="fa fa-plus"></i>
-                  <% end %>
-
-                  <% if restaurant.fans.count == 0 %>
-                  &nbsp;&nbsp;Nobody has pinned this restaurant yet
-                  <% elsif restaurant.fans.count == 1 %>
-                  &nbsp;&nbsp;1 person has pinned this restaurant
-                  <% else %>
-                  &nbsp;&nbsp;<%= restaurant.fans.count %> people have pinned this restaurant
-                  <% end %>
-                </div>
-              </p>
-
-              <p>
-                <div>
-                  <% if restaurant.fans.count == 0 %>
-                  <br>
-                  <% else %>
-                  <ul class="nav nav-pills">
-                    <% restaurant.fans.each do |fan| %>
-                    <li><a href="/users/<%= fan.id %>"><%= fan.username %></a><li>
-                      <% end %>
-                      <ul>
-                        <% end %>
-                      </div>
-                    </p>
-
-                  </div>
-                  <% if @user.id == current_user.id %>
-                  <div class="form-group">
-                    <a href="/delete_favorite/<%= restaurant.favorites.find_by({:user_id => current_user.id}) %>" class="btn btn-danger btn-block" style="background:#828282">Unpin</a>
-                  </div>
-
-                  <% else %>
-
-                  <% end %>
-
-                </div>
-              </div>
-            </div>
-
-
-            <% end %>
-
-          </div>
+    </div>

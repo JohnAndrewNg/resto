@@ -78,6 +78,7 @@ Rails.application.routes.draw do
   get "/users", :controller => "users", :action => "index"
   get "/users/:id", :controller => "users", :action => "show"
 
+
   #DELETE
   get "/delete_user/:id", :controller => "users", :action => "destroy"
 

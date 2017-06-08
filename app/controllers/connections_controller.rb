@@ -26,9 +26,13 @@ class ConnectionsController < ApplicationController
     save_status = @connection.save
 
     if save_status == true
-      redirect_to("/connections/#{@connection.id}", :notice => "Connection created successfully.")
+#      redirect_to("/connections/#{@connection.id}", :notice => "Following.")
+      redirect_to(:back, :notice => "Following.")
+
     else
-      render("connections/new.html.erb")
+#      render("connections/new.html.erb")
+      redirect_to(:back, :notice => "Following.")
+
     end
   end
 
@@ -59,9 +63,9 @@ class ConnectionsController < ApplicationController
     @connection.destroy
 
     if URI(request.referer).path == "/connections/#{@connection.id}"
-      redirect_to("/", :notice => "Connection deleted.")
+      redirect_to("/", :notice => "Unfollowed.")
     else
-      redirect_to(:back, :notice => "Connection deleted.")
+      redirect_to(:back, :notice => "Unfollowed.")
     end
   end
 end
