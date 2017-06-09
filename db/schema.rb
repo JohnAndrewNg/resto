@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170604045923) do
+ActiveRecord::Schema.define(version: 20170609020938) do
 
   create_table "comments", force: :cascade do |t|
     t.integer  "restaurant_id"
@@ -40,7 +40,7 @@ ActiveRecord::Schema.define(version: 20170604045923) do
     t.string   "name"
     t.float    "latitude"
     t.float    "longitude"
-    t.string   "addresss"
+    t.string   "address"
     t.integer  "zipcode"
     t.string   "phone_number"
     t.string   "url"

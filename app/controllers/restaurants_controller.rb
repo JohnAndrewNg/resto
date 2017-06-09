@@ -40,7 +40,7 @@ class RestaurantsController < ApplicationController
 
       if parsed_data["result"]["formatted_address"] == nil
       else
-        @restaurant.addresss = parsed_data["result"]["formatted_address"]
+        @restaurant.address = parsed_data["result"]["formatted_address"]
       end
 
       if parsed_data["result"]["formatted_phone_number"] == nil
@@ -108,7 +108,7 @@ class RestaurantsController < ApplicationController
     @restaurant.name = params[:name]
     @restaurant.latitude = params[:latitude]
     @restaurant.longitude = params[:longitude]
-    @restaurant.addresss = params[:addresss]
+    @restaurant.address = params[:address]
     @restaurant.zipcode = params[:zipcode]
     @restaurant.phone_number = params[:phone_number]
     @restaurant.url = params[:url]
