@@ -16,6 +16,6 @@ class User < ApplicationRecord
   has_many :leaders, :through => :following_connections, :source => :leader
   has_many :followers, :through => :follower_connections, :source => :follower
   has_many :favorite_restaurants, :through => :favorites, :source => :restaurant
-  has_many :timeline_favorites, :through => :leaders, :source => :favorite_restaurants
+  has_many :timeline_favorites, :through => :leaders, :source => :favorites
 
 end

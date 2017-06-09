@@ -1,3 +1,117 @@
+<head>
+<style>
+
+.profile-pic-parent {
+  width: 600;
+}
+
+.profile-pic-container {
+  display: block;
+  width: 100%;
+  height: auto;
+  position: relative;
+  overflow: hidden;
+  padding: 0 0 0 0;
+}
+
+.profile-pic-container img {
+  display: block;
+  max-width: 100%;
+  max-height: 100%;
+  position: relative;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+}
+
+</style>
+</head>
+
+
+<div class="row">
+  <div class="col-md-12 col-md-offset-0">
+    <div class="jumbotron">
+
+      <div class="row">
+
+        <div class="col-md-10">
+          <h3>
+            <%= @restaurant.name %>
+          </h3>
+
+          <div class="row">
+            <div class="col-md-10">
+              <p><small><%= @restaurant.address %></small></p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-md-2">
+          <small><%= @restaurant.phone_number %>&nbsp; | &nbsp;<a href="<%= @restaurant.url %>">Website</a></small>
+        </div>
+
+
+      </div>
+
+<br>
+        <div class="row">
+          <div class="col-md-12">
+
+          <% if @restaurant.photo_url.present? %>
+            <div class="profile-pic-parent">
+              <div class="profile-pic-container">
+                <img src="<%= @restaurant.photo_url %>">
+            </div>
+          </div>
+          <% end %>
+        </div>
+        </div>
+        <br>
+
+
+        <div class="col-md-4">
+          <p class="lead">
+            Price level: <%= @restaurant.price_level %>
+          </p>
+
+          <p class="lead">
+            Rating: <%= @restaurant.rating %>
+          </p>
+
+          <p class="lead">
+            Open:
+          </p>
+
+        </div>
+
+
+        <div class="col-md-2">
+
+          <form action="/update_restaurant/<%= @restaurant.id %>" method="post">
+            <!-- Hidden input for authenticity token to protect from forgery -->
+            <input name="authenticity_token" type="hidden" value="<%= form_authenticity_token %>">
+
+            <button class="btn btn-default btn-block">
+              Update
+            </button>
+          </form>
+
+        </div>
+
+
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+
+
+
 <div class="page-header">
   <h3>Restaurant #<%= @restaurant.id %></h3>
 </div>
@@ -17,7 +131,7 @@
       <dt>Longitude</dt>
       <dd><%= @restaurant.longitude %></dd>
 
-      <dt>Addresss</dt>
+      <dt>Address</dt>
       <dd><%= @restaurant.address %></dd>
 
       <dt>Zipcode</dt>

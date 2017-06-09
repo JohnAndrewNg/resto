@@ -5,5 +5,6 @@ class Favorite < ApplicationRecord
 
   belongs_to :user
   belongs_to :restaurant
+  has_many :timeline_users, :through => :user, :source => :leaders
 
 end

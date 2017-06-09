@@ -51,7 +51,7 @@
 
 
 <div class="row">
-  <div class="col-md-12 col-md-offset-0">
+  <div class="col-md-6 col-md-offset-2">
     <div class="jumbotron">
 
       <div class="row">
@@ -67,7 +67,13 @@
 
         <div class="col-md-10">
           <h3>
-            <%= @user.username %>
+            <% if @user.leaders.count == 0 %>
+              Not following anyone
+              <% elsif @user.leaders.count == 1 %>
+              Following 1 person
+              <% else %>
+              Following <%= @user.leaders.count %> people
+              <% end %>
           </h3>
 
           <div class="row">
@@ -77,64 +83,7 @@
           </div>
         </div>
       </div>
-      <br>
-      <div class="row">
 
-        <% if @user.id == current_user.id %>
-        <% else %>
-
-        <div class="col-md-2">
-          <% connection = Connection.find_by(:follower_id => current_user.id, :leader_id => @user.id) %>
-          <% if connection.present? %>
-          <a href="/delete_connection/<%= connection.id %>" class="btn btn-success btn-block">
-            Following
-          </a>
-          <% else %>
-          <form action="/create_connection" method="post">
-            <!-- Hidden input for authenticity token to protect from forgery -->
-            <input name="authenticity_token" type="hidden" value="<%= form_authenticity_token %>">
-
-            <input type="hidden" id="follower_d" name="follower_id" value="<%= current_user.id %>">
-
-            <input type="hidden" id="leader_id" name="leader_id" value="<%= @user.id %>">
-
-            <button class="btn btn-default btn-block">
-              Follow
-            </button>
-          </form>
-          <% end %>
-        </div>
-        <% end %>
-
-        <div class="col-md-3">
-          <p class="lead">
-            <%= @user.favorite_restaurants.count %> pinned restaurants
-          </p>
-        </div>
-
-        <div class="col-md-3">
-          <p class="lead">
-            <%= @user.followers.count %> followers
-          </p>
-        </div>
-
-        <div class="col-md-3">
-          <p class="lead">
-            <%= @user.leaders.count %> following
-          </p>
-        </div>
-      </div>
-      <br>
-      <div class="row">
-        <div class="col-md-10">
-          <p><%= @user.bio %></p>
-          <div>
-          </div>
-
-
-
-        </div>
-      </div>
     </div>
 
   </div>
@@ -146,58 +95,58 @@
 
   <br>
 
-  <% @user.timeline_favorites.reverse.each do |restaurant| %>
+  <% @user.timeline_favorites.reverse.each do |favorite| %>
 
   <div class="row">
     <div class="col-md-6 col-md-offset-2">
       <div class="panel panel-default">
         <div class="panel-heading">
           <h3 class="panel-title">
-            <a href="/restaurants/<%= restaurant.id %>"><%= restaurant.name %></a>
-            <small style="color:#828282">Pinned <%= time_ago_in_words(restaurant.favorites.find_by({:user_id => @user.id}).created_at) %> ago</small>
+            <a href="/users/<%= favorite.user.id %>"><%= favorite.user.username %></a> pinned <a href="/restaurants/<%= favorite.restaurant.id %>"><%= favorite.restaurant.name %></a>
+            <small style="color:#828282"><%= time_ago_in_words(favorite.restaurant.created_at) %> ago</small>
           </h3>
         </form>
       </div>
 
       <div class="panel-body">
-        <% if restaurant.photo_url == nil %>
+        <% if favorite.restaurant.photo_url == nil %>
         <div class="well well-sm">Image not available</div>
         <% else  %>
-        <a href="/restaurants/<%= restaurant.id %>">
-          <img src="<%= restaurant.photo_url %>" class="img-responsive">
+        <a href="/restaurants/<%= favorite.restaurant.id %>">
+          <img src="<%= favorite.restaurant.photo_url %>" class="img-responsive">
         </a>
         <% end %>
         <p>
           <div class="form control">
-            <% if restaurant.fans.count == 0 %>
+            <% if favorite.restaurant.fans.count == 0 %>
             <i class="fa fa-heart-o"></i>
-            <% elsif restaurant.fans.count == 1 %>
+            <% elsif favorite.restaurant.fans.count == 1 %>
             <i class="fa fa-heart"></i>
-            <% elsif restaurant.fans.count == 2 %>
+            <% elsif favorite.restaurant.fans.count == 2 %>
             <i class="fa fa-heart"></i> <i class="fa fa-heart"></i>
-            <% elsif restaurant.fans.count == 3 %>
+            <% elsif favorite.restaurant.fans.count == 3 %>
             <i class="fa fa-heart"></i> <i class="fa fa-heart"></i> <i class="fa fa-heart"></i>
             <% else %>
             <i class="fa fa-heart"></i> <i class="fa fa-heart"></i> <i class="fa fa-heart"></i> <i class="fa fa-plus"></i>
             <% end %>
 
-            <% if restaurant.fans.count == 0 %>
+            <% if favorite.restaurant.fans.count == 0 %>
             &nbsp;&nbsp;Nobody has pinned this restaurant yet
-            <% elsif restaurant.fans.count == 1 %>
+            <% elsif favorite.restaurant.fans.count == 1 %>
             &nbsp;&nbsp;1 person has pinned this restaurant
             <% else %>
-            &nbsp;&nbsp;<%= restaurant.fans.count %> people have pinned this restaurant
+            &nbsp;&nbsp;<%= favorite.restaurant.fans.count %> people have pinned this restaurant
             <% end %>
           </div>
         </p>
 
         <p>
           <div>
-            <% if restaurant.fans.count == 0 %>
+            <% if favorite.restaurant.fans.count == 0 %>
             <br>
             <% else %>
             <ul class="nav nav-pills">
-              <% restaurant.fans.each do |fan| %>
+              <% favorite.restaurant.fans.each do |fan| %>
               <li><a href="/users/<%= fan.id %>"><%= fan.username %></a><li>
                 <% end %>
                 <ul>
@@ -206,13 +155,24 @@
               </p>
 
             </div>
-            <% if @user.id == current_user.id %>
-            <div class="form-group">
-              <a href="/delete_favorite/<%= restaurant.favorites.find_by({:user_id => current_user.id}) %>" class="btn btn-danger btn-block" style="background:#828282">Unpin</a>
-            </div>
 
+            <% if current_user.favorites.find_by({:restaurant_id => favorite.restaurant_id}) == nil %>
+            <form action="/create_favorite" method="post">
+              <!-- Hidden input for authenticity token to protect from forgery -->
+              <input name="authenticity_token" type="hidden" value="<%= form_authenticity_token %>">
+              <input type="hidden" id="restaurant_id" name="restaurant_id" value="<%= favorite.restaurant_id %>">
+              <input type="hidden" id="user_id" name="user_id" value="<%= current_user.id %>">
+
+              <div class="form-group">
+                <button class="btn btn-primary btn-block">
+                  Pin
+                </button>
+              </div>
+            </form>
             <% else %>
-
+            <div class="form-group">
+              <a href="/delete_favorite/<%= current_user.favorites.find_by({:restaurant_id => favorite.restaurant_id}).id %>" class="btn btn-danger btn-block" style="background:#828282">Unpin</a>
+            </div>
             <% end %>
 
           </div>

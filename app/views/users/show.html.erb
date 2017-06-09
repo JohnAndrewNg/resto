@@ -206,14 +206,28 @@
               </p>
 
             </div>
-            <% if @user.id == current_user.id %>
-            <div class="form-group">
-              <a href="/delete_favorite/<%= restaurant.favorites.find_by({:user_id => current_user.id}) %>" class="btn btn-danger btn-block" style="background:#828282">Unpin</a>
-            </div>
 
+            <% if current_user.favorite_restaurants.find_by({:id => restaurant.id}) == nil %>
+            <form action="/create_favorite" method="post">
+              <!-- Hidden input for authenticity token to protect from forgery -->
+              <input name="authenticity_token" type="hidden" value="<%= form_authenticity_token %>">
+              <input type="hidden" id="restaurant_id" name="restaurant_id" value="<%= restaurant.id %>">
+              <input type="hidden" id="user_id" name="user_id" value="<%= current_user.id %>">
+
+              <div class="form-group">
+                <button class="btn btn-primary btn-block">
+                  Pin
+                </button>
+              </div>
+            </form>
             <% else %>
+            <div class="form-group">
 
+              <a href="/delete_favorite/<%= current_user.favorites.find_by({:restaurant_id => restaurant.id}).id %>" class="btn btn-danger btn-block" style="background:#828282">Unpin</a>
+
+            </div>
             <% end %>
+
 
 
           </div>
