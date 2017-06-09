@@ -146,7 +146,7 @@
 
   <br>
 
-  <% @user.favorite_restaurants.reverse.each do |restaurant| %>
+  <% @user.timeline_favorites.reverse.each do |restaurant| %>
 
   <div class="row">
     <div class="col-md-6 col-md-offset-2">
@@ -214,7 +214,6 @@
             <% else %>
 
             <% end %>
-
 
           </div>
         </div>

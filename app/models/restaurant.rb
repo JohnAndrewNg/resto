@@ -7,7 +7,8 @@ class Restaurant < ApplicationRecord
 
   has_many :favorites, :dependent => :destroy
   has_many :comments, :dependent => :destroy
-  
+
   has_many :fans, :through => :favorites, :source => :user
+  has_many :timeline_fans, :through => :fans, :source => :leaders
 
 end

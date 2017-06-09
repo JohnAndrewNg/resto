@@ -11,6 +11,14 @@ class UsersController < ApplicationController
     render("users/show.html.erb")
   end
 
+  def timeline
+    @user = current_user
+
+    render("timeline.html.erb")
+  end
+
+
+
   def destroy
     @user = User.find(params[:id])
 
