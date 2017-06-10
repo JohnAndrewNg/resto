@@ -29,33 +29,33 @@
 </head>
 
 
-  <div class="col-md-12 col-md-offset-0">
-    <div class="jumbotron">
+<div class="col-md-12 col-md-offset-0">
+  <div class="jumbotron">
 
-      <div class="row">
-        <div class="col-md-10">
-          <h3>
-            <%= @restaurant.name %>
-          </h3>
+    <div class="row">
+      <div class="col-md-10">
+        <h3>
+          <%= @restaurant.name %>
+        </h3>
 
-          <div class="row">
-            <div class="col-md-10">
-              <p><small><%= @restaurant.address %></small></p>
-            </div>
+        <div class="row">
+          <div class="col-md-10">
+            <p><small><%= @restaurant.address %></small></p>
           </div>
-        </div>
-      </div>
-
-      <div class="row">
-        <div class="col-md-3">
-          <small><%= @restaurant.phone_number %>&nbsp; | &nbsp;<a href="<%= @restaurant.url %>">Website</a></small>
         </div>
       </div>
     </div>
 
-    <div class="jumbotron" style="background: white">
     <div class="row">
-      <div class="col-md-8">
+      <div class="col-md-3">
+        <small><%= @restaurant.phone_number %>&nbsp; | &nbsp;<a href="<%= @restaurant.url %>">Website</a></small>
+      </div>
+    </div>
+  </div>
+
+  <div class="jumbotron" style="background: white">
+    <div class="row">
+      <div class="col-md-7">
 
         <% if @restaurant.photo_url.present? %>
         <div class="profile-pic-parent">
@@ -66,40 +66,51 @@
         <% end %>
       </div>
 
-      <div class="col-md-4">
+      <div class="col-md-5">
         <br>
+        <% if @restaurant.price_level == nil %>
+        <% else %>
         <p class="lead">
           Price level: <%= @restaurant.price_level %>
         </p>
+        <% end %>
 
+        <% if @restaurant.rating == nil %>
+        <% else %>
         <p class="lead">
           Rating: <%= @restaurant.rating %>
         </p>
+        <% end %>
 
+        <% if @restaurant.opening_hours == nil %>
+        <% else %>
         <p class="lead">
           Hours:
           <% @restaurant.opening_hours.each do |day|  %>
           <li><%= day %></li>
           <% end %>
         </p>
+        <% end %>
 
-        <br>
-        <form action="/update_restaurant/<%= @restaurant.id %>" method="post">
-          <!-- Hidden input for authenticity token to protect from forgery -->
-          <input name="authenticity_token" type="hidden" value="<%= form_authenticity_token %>">
+        <div class="col-md-7">
+          <br>
+          <form action="/update_restaurant/<%= @restaurant.id %>" method="post">
+            <!-- Hidden input for authenticity token to protect from forgery -->
+            <input name="authenticity_token" type="hidden" value="<%= form_authenticity_token %>">
 
-          <button class="btn btn-primary btn-block">
-            Update
-          </button>
-        </form>
-        Last updated <%= time_ago_in_words(@restaurant.updated_at) %> ago
+            <button class="btn btn-primary btn-block">
+              Update
+            </button>
+          </form>
+          Last updated <%= time_ago_in_words(@restaurant.updated_at) %> ago
+        </div>
+        </div>
       </div>
     </div>
 
 
-    </div>
-  <br>
-  <br>
+  </div>
+</div>
+</div>
 
-</div>
-</div>
+<div id="map-canvas" style="width: 100%; height: 500px"></div>

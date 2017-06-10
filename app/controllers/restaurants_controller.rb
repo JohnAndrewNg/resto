@@ -10,6 +10,12 @@ class RestaurantsController < ApplicationController
 
     @hours = @restaurant.opening_hours
 
+    @location = @restaurant.name
+    @latitude = @restaurant.latitude
+    @longitude = @restaurant.longitude
+    @zoom = 16
+
+
     render("restaurants/show.html.erb")
   end
 

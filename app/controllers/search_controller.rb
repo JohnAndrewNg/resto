@@ -7,6 +7,7 @@ class SearchController < ApplicationController
     parsed_data = JSON.parse(open(url_map).read)
     @latitude = parsed_data["results"][0]["geometry"]["location"]["lat"]
     @longitude = parsed_data["results"][0]["geometry"]["location"]["lng"]
+    @zoom = 13
 
 
     render("search/new.html.erb")
