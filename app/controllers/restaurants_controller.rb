@@ -8,6 +8,8 @@ class RestaurantsController < ApplicationController
   def show
     @restaurant = Restaurant.find(params[:id])
 
+    @hours = @restaurant.opening_hours
+
     render("restaurants/show.html.erb")
   end
 
@@ -106,52 +108,82 @@ class RestaurantsController < ApplicationController
 
     @restaurant = Restaurant.find(params[:id])
 
-    url_details =
-    "https://maps.googleapis.com/maps/api/place/details/json?placeid="+@restaurant.placeid+"&key= AIzaSyAuo4_mSeoT40F-4QAP8uyTvCdw8c7cbvU"
 
-    parsed_data = JSON.parse(open(url_details).read)
+    if params[:update_type] == "manual"
 
-    @restaurant.name = parsed_data["result"]["name"]
-    @restaurant.latitude = parsed_data["result"]["geometry"]["location"]["lat"]
-    @restaurant.longitude = parsed_data["result"]["geometry"]["location"]["lng"]
-    @restaurant.price_level = parsed_data["result"]["price_level"]
-    @restaurant.rating = parsed_data["result"]["rating"]
-    if parsed_data["result"]["photos"] == nil
-    else
-      @restaurant.photo_url = "https://maps.googleapis.com/maps/api/place/photo?maxwidth=600&maxheight=600&photoreference="+parsed_data["result"]["photos"][0]["photo_reference"]+"&key=AIzaSyAuo4_mSeoT40F-4QAP8uyTvCdw8c7cbvU"
-    end
+      @restaurant.placeid = params[:placeid]
+      @restaurant.name = params[:name]
+      @restaurant.latitude = params[:latitude]
+      @restaurant.longitude = params[:longitude]
+      @restaurant.address = params[:address]
+      @restaurant.zipcode = params[:zipcode]
+      @restaurant.phone_number = params[:phone_number]
+      @restaurant.url = params[:url]
+      @restaurant.price_level = params[:price_level]
+      @restaurant.rating = params[:rating]
+#      @restaurant.opening_hours = params[:opening_hours]
 
-    if parsed_data["result"]["formatted_address"] == nil
-    else
-      @restaurant.address = parsed_data["result"]["formatted_address"]
-    end
+      @restaurant.opening_hours =
+      ["Monday: "+params[:monday],
+      "Tuesday: "+params[:tuesday],
+      "Wednesday: "+params[:wednesday],
+      "Thursday: "+params[:thursday],
+      "Friday: "+params[:friday],
+      "Saturday: "+params[:saturday],
+      "Sunday: "+params[:sunday]]
 
-    if parsed_data["result"]["formatted_phone_number"] == nil
-    else
-      @restaurant.phone_number = parsed_data["result"]["formatted_phone_number"]
-    end
-    #      for num in 0..12 do
-    #        if parsed_data["result"]["address_components"][num]["types"] == "postal_code"
-    #          @restaurant.zipcode = parsed_data["result"]["address_components"][num]["long_name"]
-    #          break
-    #        else
-    #        end
-    #      end
-    #      @restaurant.zipcode = parsed_data["result"]["address_components"][7]["long_name"]
-    if parsed_data["result"]["opening_hours"] == nil
-    else
-      @restaurant.opening_hours = parsed_data["result"]["opening_hours"]["weekday_text"]
-    end
+      @restaurant.photo_url = params[:photo_url]
 
-    if parsed_data["result"]["website"] == nil
     else
-      @restaurant.url = parsed_data["result"]["website"]
+
+      url_details =
+      "https://maps.googleapis.com/maps/api/place/details/json?placeid="+@restaurant.placeid+"&key= AIzaSyAuo4_mSeoT40F-4QAP8uyTvCdw8c7cbvU"
+
+      parsed_data = JSON.parse(open(url_details).read)
+
+      @restaurant.name = parsed_data["result"]["name"]
+      @restaurant.latitude = parsed_data["result"]["geometry"]["location"]["lat"]
+      @restaurant.longitude = parsed_data["result"]["geometry"]["location"]["lng"]
+      @restaurant.price_level = parsed_data["result"]["price_level"]
+      @restaurant.rating = parsed_data["result"]["rating"]
+      if parsed_data["result"]["photos"] == nil
+      else
+        @restaurant.photo_url = "https://maps.googleapis.com/maps/api/place/photo?maxwidth=600&maxheight=600&photoreference="+parsed_data["result"]["photos"][0]["photo_reference"]+"&key=AIzaSyAuo4_mSeoT40F-4QAP8uyTvCdw8c7cbvU"
+      end
+
+      if parsed_data["result"]["formatted_address"] == nil
+      else
+        @restaurant.address = parsed_data["result"]["formatted_address"]
+      end
+
+      if parsed_data["result"]["formatted_phone_number"] == nil
+      else
+        @restaurant.phone_number = parsed_data["result"]["formatted_phone_number"]
+      end
+      #      for num in 0..12 do
+      #        if parsed_data["result"]["address_components"][num]["types"] == "postal_code"
+      #          @restaurant.zipcode = parsed_data["result"]["address_components"][num]["long_name"]
+      #          break
+      #        else
+      #        end
+      #      end
+      #      @restaurant.zipcode = parsed_data["result"]["address_components"][7]["long_name"]
+      if parsed_data["result"]["opening_hours"] == nil
+      else
+        @restaurant.opening_hours = parsed_data["result"]["opening_hours"]["weekday_text"]
+      end
+
+      if parsed_data["result"]["website"] == nil
+      else
+        @restaurant.url = parsed_data["result"]["website"]
+      end
+
     end
 
     save_status = @restaurant.save
 
     if save_status == true
-#      redirect_to("/restaurants/#{@restaurant.id}", :notice => "Restaurant updated successfully.")
+      #      redirect_to("/restaurants/#{@restaurant.id}", :notice => "Restaurant updated successfully.")
       redirect_to(:back, :notice => "Restaurant updated")
 
     else

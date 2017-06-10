@@ -1,5 +1,7 @@
 class Restaurant < ApplicationRecord
 
+  serialize :opening_hours
+
   validates :placeid, :presence => true
   validates :name, :presence => true
   validates :latitude, :presence => true
@@ -9,5 +11,6 @@ class Restaurant < ApplicationRecord
   has_many :comments, :dependent => :destroy
 
   has_many :fans, :through => :favorites, :source => :user
+
 
 end

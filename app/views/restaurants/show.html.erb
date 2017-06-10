@@ -29,12 +29,10 @@
 </head>
 
 
-<div class="row">
   <div class="col-md-12 col-md-offset-0">
     <div class="jumbotron">
 
       <div class="row">
-
         <div class="col-md-10">
           <h3>
             <%= @restaurant.name %>
@@ -49,124 +47,59 @@
       </div>
 
       <div class="row">
-        <div class="col-md-2">
+        <div class="col-md-3">
           <small><%= @restaurant.phone_number %>&nbsp; | &nbsp;<a href="<%= @restaurant.url %>">Website</a></small>
         </div>
-
-
       </div>
+    </div>
 
-<br>
-        <div class="row">
-          <div class="col-md-12">
+    <div class="jumbotron" style="background: white">
+    <div class="row">
+      <div class="col-md-8">
 
-          <% if @restaurant.photo_url.present? %>
-            <div class="profile-pic-parent">
-              <div class="profile-pic-container">
-                <img src="<%= @restaurant.photo_url %>">
-            </div>
+        <% if @restaurant.photo_url.present? %>
+        <div class="profile-pic-parent">
+          <div class="profile-pic-container">
+            <img src="<%= @restaurant.photo_url %>" class="img-responsive">
           </div>
-          <% end %>
         </div>
-        </div>
+        <% end %>
+      </div>
+
+      <div class="col-md-4">
         <br>
+        <p class="lead">
+          Price level: <%= @restaurant.price_level %>
+        </p>
 
+        <p class="lead">
+          Rating: <%= @restaurant.rating %>
+        </p>
 
-        <div class="col-md-4">
-          <p class="lead">
-            Price level: <%= @restaurant.price_level %>
-          </p>
+        <p class="lead">
+          Hours:
+          <% @restaurant.opening_hours.each do |day|  %>
+          <li><%= day %></li>
+          <% end %>
+        </p>
 
-          <p class="lead">
-            Rating: <%= @restaurant.rating %>
-          </p>
+        <br>
+        <form action="/update_restaurant/<%= @restaurant.id %>" method="post">
+          <!-- Hidden input for authenticity token to protect from forgery -->
+          <input name="authenticity_token" type="hidden" value="<%= form_authenticity_token %>">
 
-          <p class="lead">
-            Open:
-          </p>
-
-        </div>
-
-
-        <div class="col-md-2">
-
-          <form action="/update_restaurant/<%= @restaurant.id %>" method="post">
-            <!-- Hidden input for authenticity token to protect from forgery -->
-            <input name="authenticity_token" type="hidden" value="<%= form_authenticity_token %>">
-
-            <button class="btn btn-default btn-block">
-              Update
-            </button>
-          </form>
-
-        </div>
-
-
-        </div>
+          <button class="btn btn-primary btn-block">
+            Update
+          </button>
+        </form>
+        Last updated <%= time_ago_in_words(@restaurant.updated_at) %> ago
       </div>
     </div>
 
-  </div>
-</div>
 
-
-
-
-<div class="page-header">
-  <h3>Restaurant #<%= @restaurant.id %></h3>
-</div>
-
-<div class="row">
-  <div class="col-md-12 mb-2">
-    <dl class="dl-horizontal">
-      <dt>Placeid</dt>
-      <dd><%= @restaurant.placeid %></dd>
-
-      <dt>Name</dt>
-      <dd><%= @restaurant.name %></dd>
-
-      <dt>Latitude</dt>
-      <dd><%= @restaurant.latitude %></dd>
-
-      <dt>Longitude</dt>
-      <dd><%= @restaurant.longitude %></dd>
-
-      <dt>Address</dt>
-      <dd><%= @restaurant.address %></dd>
-
-      <dt>Zipcode</dt>
-      <dd><%= @restaurant.zipcode %></dd>
-
-      <dt>Phone number</dt>
-      <dd><%= @restaurant.phone_number %></dd>
-
-      <dt>Url</dt>
-      <dd><%= @restaurant.url %></dd>
-
-      <dt>Price level</dt>
-      <dd><%= @restaurant.price_level %></dd>
-
-      <dt>Rating</dt>
-      <dd><%= @restaurant.rating %></dd>
-
-      <dt>Opening hours</dt>
-      <dd><%= @restaurant.opening_hours %></dd>
-
-      <dt>Photo url</dt>
-      <dd><%= @restaurant.photo_url %></dd>
-
-    </dl>
-
-    <div class="btn-group btn-group-justified">
-      <a href="/restaurants" class="btn btn-primary">
-        Back
-      </a>
-      <a href="/restaurants/<%= @restaurant.id %>/edit" class="btn btn-warning">
-        Edit
-      </a>
-      <a href="/delete_restaurant/<%= @restaurant.id %>" class="btn btn-danger" rel="nofollow">
-        Delete
-      </a>
     </div>
-  </div>
+  <br>
+  <br>
+
+</div>
 </div>

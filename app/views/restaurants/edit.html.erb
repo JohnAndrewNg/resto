@@ -114,8 +114,43 @@
           Opening hours
         </label>
 
-        <textarea id="opening_hours" name="opening_hours" placeholder="Opening hours" class="form-control" rows="3"><%= @restaurant.opening_hours %></textarea>
-      </div>
+      <label for="opening_hours" class="control-label">
+        Monday:
+      </label>
+      <input type="text" id="monday" name="monday" placeholder="Monday hours" class="form-control">
+
+      <label for="opening_hours" class="control-label">
+        Tuesday:
+      </label>
+      <input type="text" id="tuesday" name="tuesday" placeholder="Tuesday hours" class="form-control">
+
+      <label for="opening_hours" class="control-label">
+        Wednesday:
+      </label>
+      <input type="text" id="wednesday" name="wednesday" placeholder="Wednesday hours" class="form-control">
+
+      <label for="opening_hours" class="control-label">
+        Thursday:
+      </label>
+      <input type="text" id="thursday" name="thursday" placeholder="Thursday hours" class="form-control">
+
+      <label for="opening_hours" class="control-label">
+        Friday:
+      </label>
+      <input type="text" id="friday" name="friday" placeholder="Friday hours" class="form-control">
+
+      <label for="opening_hours" class="control-label">
+        Saturday:
+      </label>
+      <input type="text" id="saturday" name="saturday" placeholder="Saturday hours" class="form-control">
+
+      <label for="opening_hours" class="control-label">
+        Sunday:
+      </label>
+      <input type="text" id="sunday" name="sunday" placeholder="Sunday hours" class="form-control">
+
+    </div>
+
 
       <!-- Label and input for photo_url -->
       <div class="form-group">
@@ -125,6 +160,10 @@
 
         <input type="text" id="photo_url" name="photo_url" placeholder="Photo url" class="form-control" value="<%= @restaurant.photo_url %>">
       </div>
+
+      <div class="form-group">
+      <input type="hidden" id="update_type" name="update_type" value="manual">
+    </div>
 
       <button class="btn btn-warning">
         Update Restaurant
