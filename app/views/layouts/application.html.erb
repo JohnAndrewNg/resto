@@ -40,9 +40,9 @@
       <!-- Collect the nav links, forms, and other content for toggling -->
       <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
         <ul class="nav navbar-nav">
-          <li><a href="/search/new">Search</a></li>
           <% if current_user == nil %>
           <% else %>
+          <li><a href="/search/new">Search</a></li>
           <li><a href="/timeline">Feed</a></li>
           <li><a href="/users/<%= current_user.id %>">My Restaurants</a></li>
           <% end %>

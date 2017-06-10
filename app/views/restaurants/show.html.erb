@@ -55,16 +55,15 @@
 
   <div class="jumbotron" style="background: white">
     <div class="row">
+      <% if @restaurant.photo_url.present? %>
       <div class="col-md-7">
-
-        <% if @restaurant.photo_url.present? %>
         <div class="profile-pic-parent">
           <div class="profile-pic-container">
             <img src="<%= @restaurant.photo_url %>" class="img-responsive">
           </div>
         </div>
-        <% end %>
       </div>
+      <% end %>
 
       <div class="col-md-5">
         <br>
